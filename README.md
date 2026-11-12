@@ -1,10 +1,8 @@
 # Column Correction for the Steam Frame
 
-English below. Russian and German versions are in the collapsible sections further down.
+Russian and German versions are in the collapsible sections further down.
 
 ---
-
-## English
 
 ### What it is
 
