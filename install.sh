@@ -1,6 +1,6 @@
 #!/bin/bash
 # Copyright (c) 2026 ClericC - MIT License - https://github.com/ClericC/frame-column-correction
-# Frame VCOM installer: the vcom-fix correction service (root) + the SteamVR dashboard panel (user).
+# Frame VCOM installer: the vcom-fix correction service (root) + the SteamVR dashboard app (user).
 #   tar -xzf frame-column-correction.tar.gz && sudo bash frame-column-correction/install.sh
 # Settings already in /home/steamos/vcom-fix/vcom.conf are kept.
 set -euo pipefail
@@ -18,7 +18,7 @@ install -m 0755 "$SRC/vcomd.sh" "$R/etc/vcom-fix/vcomd.sh"
 CONF="$HOMED/vcom-fix/vcom.conf"
 NEW_CONF=0
 if [ ! -f "$CONF" ]; then   # new install: neutral values, correction off until calibrated for this headset
-  printf '%s\n' "# Column Correction settings (edited by the dashboard panel). Offsets are steps above each panel's factory VCOM." \
+  printf '%s\n' "# Column Correction settings (edited by the dashboard app). Offsets are steps above each display's factory VCOM." \
     COLD_TEMP=34 COLD_LEFT=0 COLD_RIGHT=0 HOT_TEMP=52 HOT_LEFT=0 HOT_RIGHT=0 LAG_MIN=22 LEFT_TRIM=0 RIGHT_TRIM=0 ENABLED=0 > "$CONF"
   NEW_CONF=1
 fi
@@ -36,7 +36,7 @@ RestartSec=5
 WantedBy=multi-user.target
 UNIT
 
-# 2. dashboard panel, for the user only
+# 2. dashboard app, for the user only
 LIB="$HOMED/.local/lib/frame-vcom"
 APPS="$HOMED/.local/share/applications"
 ICONS="$HOMED/.local/share/icons/hicolor"
@@ -74,7 +74,7 @@ fi
 echo
 echo "Column Correction $(cat "$SRC/VERSION") installed."
 echo "Open it from the SteamVR dashboard: + > Column Correction / Коррекция столбцов (a renamed entry can need a headset restart)."
-echo "Remove the panel: bash ~/.local/lib/frame-vcom/uninstall.sh"
+echo "Remove the app: bash ~/.local/lib/frame-vcom/uninstall.sh"
 if [ $NEW_CONF = 1 ]; then
   echo
   echo "The correction is OFF until you calibrate it for this headset: see README.md (cold point, then hot point)."
