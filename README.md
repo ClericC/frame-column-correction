@@ -1,6 +1,6 @@
-# Column Correction for the Steam Frame / Коррекция столбцов для Steam Frame
+# Column Correction for the Steam Frame
 
-English below · Русский и Deutsch — в раскрывающихся блоках ниже / in den aufklappbaren Blöcken unten
+English below. Russian and German versions are in the collapsible sections further down.
 
 ---
 
@@ -82,7 +82,7 @@ Latest version: [frame-column-correction.tar.gz](https://github.com/ClericC/fram
 
 1. Press the system button on a controller to open the SteamVR dashboard.
 2. Click **"+"** at the bottom of the dashboard.
-3. In the list of programs to launch, choose **Column Correction** (shown as "Коррекция столбцов" when SteamVR is in Russian).
+3. In the list of programs to launch, choose **Column Correction**.
 
 The app opens inside the dashboard. The correction itself is done by the service and keeps working when the app is closed: you only need the app to switch the correction on or off, adjust it or calibrate it. **Close** ends the app; open it again the same way.
 
