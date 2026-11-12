@@ -1,6 +1,6 @@
 # Column Correction for the Steam Frame / Коррекция столбцов для Steam Frame
 
-[English](#english) · [Русский](#русский)
+English below · Русская версия — в раскрывающемся блоке ниже
 
 ---
 
@@ -14,6 +14,8 @@ The stripes appear to be related to the **VCOM** voltage of the LCD displays: sh
 
 - **the `vcom-fix` service** shifts each display's VCOM relative to its own factory value and follows the headset's warm-up;
 - **the "Column Correction" app** in the SteamVR dashboard turns the correction on and off, adjusts it separately for the left and right display, and calibrates it right in the headset.
+
+![The Column Correction app in the SteamVR dashboard](docs/screenshots/app-en.png)
 
 ### Why this project
 
@@ -139,7 +141,8 @@ Your settings are kept. If you are working as root (the line starts with `[root@
 
 ---
 
-## Русский
+<details>
+<summary><b>Русский (нажмите, чтобы раскрыть)</b></summary>
 
 ### Что это
 
@@ -149,6 +152,8 @@ Your settings are kept. If you are working as root (the line starts with `[root@
 
 - **служба `vcom-fix`** сдвигает VCOM каждого дисплея относительно его собственного заводского значения и плавно меняет сдвиг по мере прогрева;
 - **приложение «Коррекция столбцов»** в дашборде SteamVR позволяет включать и выключать коррекцию, подстраивать её отдельно для левого и правого дисплея и калибровать прямо в шлеме.
+
+![Приложение «Коррекция столбцов» в дашборде SteamVR](docs/screenshots/app-ru.png)
 
 ### Почему появился этот проект
 
@@ -271,6 +276,8 @@ tar -xzf frame-column-correction.tar.gz && sudo bash frame-column-correction/ins
 **Удаление службы:** `sudo systemctl disable --now vcom-fix && sudo rm -r /etc/vcom-fix /etc/systemd/system/vcom-fix.service`, затем перезагрузка.
 
 **После крупного обновления SteamOS** проверьте `systemctl is-active vcom-fix`. Если служба пропала, установите заново.
+
+</details>
 
 ---
 
