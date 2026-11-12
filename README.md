@@ -10,6 +10,8 @@ English below. Russian and German versions are in the collapsible sections furth
 
 Some Steam Frame owners, including me, see fine vertical stripes (neighbouring pixel columns with different brightness). They are almost invisible on a cold headset and become noticeable after 15–30 minutes, especially on grey, green and blue and while turning the head. Reports on the Steam forum mention them on the left display for some units and on the right for others. How many headsets are affected is not known.
 
+![Illustration: the same scene with stripes (left) and without (right)](docs/screenshots/stripes-en.png)
+
 The stripes appear to be related to the **VCOM** voltage of the LCD displays: shifting it away from the factory value makes them disappear, and the shift needed grows as the displays warm up. Why the factory value does not fit is not known (calibration conditions, a calibration error or a defect are all possible). This package does roughly what the Valve Index "Column correction" setting did:
 
 - **the `vcom-fix` service** shifts each display's VCOM relative to its own factory value and follows the headset's warm-up;
@@ -147,6 +149,8 @@ Your settings are kept. If you are working as root (the line starts with `[root@
 ### Что это
 
 У некоторых владельцев Steam Frame, в том числе у меня, видны тонкие вертикальные полосы (соседние столбцы пикселей светятся с разной яркостью). Они почти не видны на холодном шлеме и становятся заметнее через 15–30 минут игры, особенно на серых, зелёных и синих тонах и при поворотах головы. По сообщениям на форуме Steam, у одних полосы на левом дисплее, у других на правом. Сколько шлемов затронуто, неизвестно.
+
+![Иллюстрация: одна и та же сцена с полосами (слева) и без них (справа)](docs/screenshots/stripes-ru.png)
 
 Полосы, судя по всему, связаны с напряжением **VCOM** LCD-дисплеев: если сдвинуть его от заводского значения, полосы пропадают, а нужный сдвиг растёт по мере прогрева дисплеев. Почему заводское значение не подходит, неизвестно: возможны условия калибровки на заводе, ошибка калибровки или брак. Этот набор делает примерно то же, что настройка «Коррекция столбцов» для Valve Index:
 
@@ -287,6 +291,8 @@ tar -xzf frame-column-correction.tar.gz && sudo bash frame-column-correction/ins
 ### Worum es geht
 
 Bei einigen Steam-Frame-Besitzern, auch bei mir, sind feine senkrechte Streifen zu sehen (benachbarte Pixelspalten unterschiedlich hell). Auf einem kalten Headset sind sie kaum sichtbar und werden nach 15–30 Minuten deutlicher, vor allem auf grauen, grünen und blauen Flächen und bei Kopfbewegungen. Laut Berichten im Steam-Forum betrifft es bei manchen Geräten das linke, bei anderen das rechte Display. Wie viele Headsets betroffen sind, ist nicht bekannt.
+
+![Illustration: dieselbe Szene mit Streifen (links) und ohne (rechts)](docs/screenshots/stripes-de.png)
 
 Die Streifen hängen offenbar mit der **VCOM**-Spannung der LCD-Displays zusammen: Verschiebt man sie gegenüber dem Werkswert, verschwinden die Streifen, und die nötige Verschiebung wächst, wenn sich die Displays erwärmen. Warum der Werkswert nicht passt, ist nicht bekannt (Kalibrierbedingungen, ein Kalibrierfehler oder ein Defekt sind möglich). Dieses Paket macht ungefähr das, was die Einstellung „Column correction“ bei der Valve Index tat:
 
