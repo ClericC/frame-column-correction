@@ -1,6 +1,6 @@
 # Column Correction for the Steam Frame / Коррекция столбцов для Steam Frame
 
-English below · Русская версия — в раскрывающемся блоке ниже
+English below · Русский и Deutsch — в раскрывающихся блоках ниже / in den aufklappbaren Blöcken unten
 
 ---
 
@@ -281,11 +281,151 @@ tar -xzf frame-column-correction.tar.gz && sudo bash frame-column-correction/ins
 
 ---
 
-### License / Лицензия
+<details>
+<summary><b>Deutsch (zum Aufklappen klicken)</b></summary>
+
+### Worum es geht
+
+Bei einigen Steam-Frame-Besitzern, auch bei mir, sind feine senkrechte Streifen zu sehen (benachbarte Pixelspalten unterschiedlich hell). Auf einem kalten Headset sind sie kaum sichtbar und werden nach 15–30 Minuten deutlicher, vor allem auf grauen, grünen und blauen Flächen und bei Kopfbewegungen. Laut Berichten im Steam-Forum betrifft es bei manchen Geräten das linke, bei anderen das rechte Display. Wie viele Headsets betroffen sind, ist nicht bekannt.
+
+Die Streifen hängen offenbar mit der **VCOM**-Spannung der LCD-Displays zusammen: Verschiebt man sie gegenüber dem Werkswert, verschwinden die Streifen, und die nötige Verschiebung wächst, wenn sich die Displays erwärmen. Warum der Werkswert nicht passt, ist nicht bekannt (Kalibrierbedingungen, ein Kalibrierfehler oder ein Defekt sind möglich). Dieses Paket macht ungefähr das, was die Einstellung „Column correction“ bei der Valve Index tat:
+
+- **der Dienst `vcom-fix`** verschiebt VCOM jedes Displays relativ zu dessen eigenem Werkswert und folgt der Erwärmung des Headsets;
+- **die App „Column Correction“** im SteamVR-Dashboard schaltet die Korrektur ein und aus, stellt sie für das linke und rechte Display getrennt ein und kalibriert sie direkt im Headset. Die App ist auf Englisch (oder Russisch).
+
+![Die App „Column Correction“ im SteamVR-Dashboard](docs/screenshots/app-en.png)
+
+### Warum dieses Projekt
+
+Bei meinem Headset brauchen beide Displays beim Erwärmen eine Korrektur, das rechte mehr als das linke. Andere Besitzer berichteten im Steam-Forum, dass sie nach einer Reparatur oder einem Austausch dasselbe Problem auf dem anderen Display hatten, teils sogar stärker. Deshalb habe ich das Headset nicht eingeschickt, sondern versucht, dem Problem mit Hilfe von Claude (dem KI-Assistenten von Anthropic) auf den Grund zu gehen, und teile hier die Ergebnisse.
+
+### ⚠️ Bitte lesen
+
+- **Experimentell und inoffiziell. Nutzung auf eigene Gefahr.** Keine Verbindung zu Valve.
+- Es ändert eine tiefliegende Einstellung der LCD-Displays. Falsche Werte über längere Zeit können **Einbrennen / Nachbilder** („Ghosting“) verursachen und ein Display theoretisch beschädigen.
+- Die Nutzung kann die Garantie beeinflussen.
+- Getestet an einem Steam Frame (BOE-Displays) im November 2026, einschließlich des automatischen Auslesens der Werkswerte. Künftige SteamOS-Updates können etwas ändern.
+- Nichts wird in den Speicher der Displays geschrieben: Korrektur ausschalten oder den Dienst entfernen und neu starten stellt die Werkswerte wieder her.
+
+### Voraussetzungen
+
+- Ein Steam Frame mit eingeschaltetem **Entwicklermodus**: Steam Settings → System → Enable Developer Mode. Danach **ein Passwort setzen**: Developer → Set User Password.
+- Ein Computer im selben Netzwerk mit `ssh`/`scp` (unter Windows 10/11 in PowerShell bereits enthalten).
+
+### Wo die Befehle eingegeben werden
+
+Befehle werden an zwei Stellen eingegeben, und es ist wichtig, welche. Der Zeilenanfang zeigt, wo Sie sind:
+
+| Zeile beginnt mit | Sie sind auf | Befehle |
+|---|---|---|
+| `PS C:\Users\...>` | dem **Computer** (PowerShell) | nur `ssh` (und `scp` bei Variante 2) |
+| `[steamos@frame ~]$` | dem **Headset** (nach `ssh`) | alles andere (`curl`, `tar`, `sudo bash …`) |
+
+Fügen Sie einen Headset-Befehl in PowerShell ein, erscheint eine Fehlermeldung zum Token „&&“. Dann sind Sie noch auf dem Computer: zuerst mit `ssh` verbinden.
+
+### Installation
+
+Neueste Version: [frame-column-correction.tar.gz](https://github.com/ClericC/frame-column-correction/releases/latest/download/frame-column-correction.tar.gz) (alle Versionen auf der Seite [Releases](https://github.com/ClericC/frame-column-correction/releases)).
+
+**Variante 1 (einfacher): direkt auf das Headset herunterladen.**
+
+1. **Auf dem Computer** (PowerShell) mit dem Headset verbinden:
+   ```
+   ssh steamos@frame
+   ```
+   Es wird das Passwort des Entwicklermodus abgefragt (es wird beim Tippen nicht angezeigt, das ist normal). Wird `frame` nicht gefunden, die IP-Adresse des Headsets verwenden.
+2. **Auf dem Headset** (Zeile beginnt mit `[steamos@frame ~]$`) herunterladen und installieren:
+   ```
+   curl -LO https://github.com/ClericC/frame-column-correction/releases/latest/download/frame-column-correction.tar.gz
+   tar -xzf frame-column-correction.tar.gz && sudo bash frame-column-correction/install.sh
+   ```
+   Am Ende sollte `vcom-fix: active` erscheinen. Mit `exit` kehren Sie zum Computer zurück.
+
+**Variante 2: über den Computer** (falls das Headset die Datei nicht selbst herunterladen kann).
+
+1. `frame-column-correction.tar.gz` auf den Computer herunterladen.
+2. **Auf dem Computer** (PowerShell) auf das Headset kopieren und verbinden (Pfad anpassen):
+   ```
+   scp $HOME\Downloads\frame-column-correction.tar.gz steamos@frame:
+   ssh steamos@frame
+   ```
+3. **Auf dem Headset** installieren:
+   ```
+   tar -xzf frame-column-correction.tar.gz && sudo bash frame-column-correction/install.sh
+   ```
+
+**Danach:** das Headset neu starten (der neue Eintrag erscheint nach einem Neustart im Menü).
+
+### App öffnen
+
+1. Die Systemtaste am Controller drücken, um das SteamVR-Dashboard zu öffnen.
+2. Unten im Dashboard auf **„+“** klicken.
+3. In der Liste der Programme zum Starten **Column Correction** wählen.
+
+Die App öffnet sich im Dashboard. Die Korrektur selbst übernimmt der Dienst, sie läuft auch bei geschlossener App weiter: Die App wird nur zum Ein-/Ausschalten, Nachjustieren und Kalibrieren gebraucht. **Close** beendet die App; geöffnet wird sie auf dieselbe Weise.
+
+Nach der Installation ist die Korrektur **aus** und alle Werte sind 0. Zuerst für das eigene Headset kalibrieren.
+
+### Kalibrierung (einmalig)
+
+1. **Kalter Punkt.** Direkt nach dem Einschalten eines kalten Headsets die App öffnen und **ON** drücken. Auf eine gleichmäßige graue oder grüne Fläche schauen und den Kopf langsam drehen. Mit „−“ / „+“ für jedes Display den Wert ohne Streifen finden (dabei das andere Auge schließen). Dann **„Save cold point“** drücken und zur Bestätigung noch einmal.
+2. **Warmer Punkt.** 1–2 Stunden spielen, bis „Displays (est.)“ nicht mehr deutlich steigt. Die Werte erneut finden und **„Save hot point“** drücken.
+3. Fertig. Zwischen beiden Punkten folgt der Dienst der Temperatur selbstständig.
+
+Tauchen später in einer Phase der Erwärmung Streifen auf, mit „−/+“ nachjustieren (eine vorübergehende Korrektur über der Kurve). Wird sie dauerhaft gebraucht, den Punkt neu speichern.
+
+Tipps:
+- **„Umgekehrte“ Streifen** bedeuten zu viel Korrektur.
+- **Erscheinen Streifen mitten in der Erwärmung,** `LAG_MIN` in der Einstellungsdatei anpassen: wie langsam die Displays der Kameratemperatur folgen, in Minuten (Standard 22). Verringern, wenn die Korrektur hinterherhinkt, erhöhen, wenn sie vorauseilt.
+
+### So funktioniert die Temperaturverfolgung
+
+- **Die Displays haben keinen eigenen Temperatursensor.** Der Dienst nutzt den Mittelwert der **Kamera**-Sensoren (`camera0`, `camera1`). Sie sitzen vorne neben den Displays und springen, anders als CPU und GPU, nicht mit der Spiellast.
+- **Die Kameras erwärmen sich schneller als die Displays**, deshalb nutzt der Dienst ihre Temperatur nicht direkt. Er führt eine geglättete **geschätzte Displaytemperatur**, die den Kameras mit einer Verzögerung von `LAG_MIN` Minuten folgt (Standard 22). Die App zeigt sie als „Displays (est.)“.
+- **Die VCOM-Verschiebung** bewegt sich anhand dieser Schätzung gleitend zwischen kaltem und warmem Punkt. Unterhalb des kalten Punkts gilt dessen Wert, oberhalb des warmen Punkts der warme Wert.
+- **Wird das Headset abgesetzt und geht in den Ruhezustand,** kühlen Displays und Kameras ab, und die Schätzung folgt allmählich.
+- **Nach einer Pause** (Headset eine Weile abgesetzt) können daher kurz Streifen auftauchen: Die Schätzung passt noch nicht zur tatsächlichen Displaytemperatur. Bei richtiger Kalibrierung verschwinden sie nach einigen Minuten von selbst. Bleiben sie, einen Kalibrierpunkt oder `LAG_MIN` anpassen.
+- Die Schätzung übersteht einen Neustart des Dienstes und wird nur beim Neustart des Headsets zurückgesetzt.
+
+### Sicherheitsprüfungen
+
+- Einmal pro Woche auf Nachbilder prüfen: 5–10 Minuten auf ein unbewegtes, kontrastreiches Bild schauen, dann auf eine gleichmäßige graue Fläche, jeweils mit einem Auge. Bleibt ein Umriss länger als einige Sekunden, die Korrektur ausschalten.
+- Der Dienst geht nie über −10 … +45 Schritte vom Werkswert hinaus.
+- Kann der Dienst die Werkswerte der Displays nicht lesen, **ändert er nichts** und zeigt einen Fehler in der App.
+- Nach sehr langen Sitzungen (viele Stunden) brauchen die Displays vorübergehend eventuell mehr Korrektur. Eine Pause hilft besser als höhere Werte.
+
+### Dateien und Befehle
+
+| Was | Wo |
+|---|---|
+| Einstellungen | `/home/steamos/vcom-fix/vcom.conf` |
+| Aktueller Zustand | `cat /run/vcom-fix.state` |
+| App-Protokoll | `journalctl --user -u frame-vcom` |
+| Dienst-Protokoll | `sudo journalctl -u vcom-fix` |
+
+**Aktualisieren:** mit dem Headset verbinden (`ssh steamos@frame`) und **auf dem Headset** ausführen (oder das Archiv wie bei Variante 2 vom Computer übertragen):
+```
+sudo rm -rf frame-column-correction frame-column-correction.tar.gz
+curl -LO https://github.com/ClericC/frame-column-correction/releases/latest/download/frame-column-correction.tar.gz
+tar -xzf frame-column-correction.tar.gz && sudo bash frame-column-correction/install.sh
+```
+Ihre Einstellungen bleiben erhalten. Arbeiten Sie als root (Zeile beginnt mit `[root@frame …]#`), zuerst in den richtigen Ordner wechseln: `cd /home/steamos`.
+
+**App entfernen:** `bash ~/.local/lib/frame-vcom/uninstall.sh`.
+
+**Dienst entfernen:** `sudo systemctl disable --now vcom-fix && sudo rm -r /etc/vcom-fix /etc/systemd/system/vcom-fix.service`, danach neu starten.
+
+**Nach einem größeren SteamOS-Update** `systemctl is-active vcom-fix` prüfen und bei Bedarf neu installieren.
+
+</details>
+
+---
+
+### License
 
 MIT, © 2026 ClericC: see `LICENSE`. Feedback and bug reports: [Issues](https://github.com/ClericC/frame-column-correction/issues).
 
-### Third-party / Сторонние компоненты
+### Third-party
 
 - OpenVR API (Valve), BSD-3-Clause: `LICENSE.openvr`
 - Pre-rendered glyphs of the DejaVu fonts: `FONT-LICENSE.txt`
