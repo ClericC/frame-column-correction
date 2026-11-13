@@ -1,6 +1,6 @@
 # Column Correction for the Steam Frame
 
-Russian and German versions are in the collapsible sections further down.
+Other languages are available at the bottom of the page.
 
 ---
 
