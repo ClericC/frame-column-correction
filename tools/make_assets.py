@@ -6,9 +6,9 @@ from PIL import Image, ImageDraw, ImageFont
 
 OUT = sys.argv[1]
 FD = "/usr/share/fonts/truetype/dejavu/"
-FONTS = {"s": ("DejaVuSans.ttf", 24), "m": ("DejaVuSans.ttf", 30), "mb": ("DejaVuSans-Bold.ttf", 30),
+FONTS = {"xs": ("DejaVuSans.ttf", 14), "s": ("DejaVuSans.ttf", 24), "m": ("DejaVuSans.ttf", 30), "mb": ("DejaVuSans-Bold.ttf", 30),
          "l": ("DejaVuSans-Bold.ttf", 38), "xl": ("DejaVuSans-Bold.ttf", 84)}
-CHARS = [chr(c) for c in range(32, 127)] + [chr(c) for c in range(0xA0, 0x100)] + [chr(c) for c in range(0x410, 0x450)] + ["Ё", "ё"] + list("°±−–—…·×→≤≥")
+CHARS = [chr(c) for c in range(32, 127)] + [chr(c) for c in range(0xA0, 0x100)] + [chr(c) for c in range(0x410, 0x450)] + ["Ё", "ё"] + list("°±−–—…·×→≤≥„“”‘’")
 
 meta, blob = {}, bytearray()
 for key, (file, size) in FONTS.items():

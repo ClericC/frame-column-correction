@@ -41,7 +41,7 @@ LIB="$HOMED/.local/lib/frame-vcom"
 APPS="$HOMED/.local/share/applications"
 ICONS="$HOMED/.local/share/icons/hicolor"
 rm -rf "$LIB.new" && mkdir -p "$LIB.new" "$APPS" "$ICONS/256x256/apps"
-for f in frame_vcom.py glyphs.bin glyphs.json icon.png LICENSE FONT-LICENSE.txt LICENSE.openvr uninstall.sh README.md VERSION; do
+for f in frame_vcom.py glyphs.bin glyphs.json icon.png LICENSE FONT-LICENSE.txt LICENSE.openvr uninstall.sh README.md CHANGELOG.md VERSION; do
   cp "$SRC/$f" "$LIB.new/"
 done
 rm -rf "$LIB" && mv "$LIB.new" "$LIB"
@@ -54,6 +54,7 @@ Name=Column Correction
 Name[ru]=Коррекция столбцов
 Comment=Column correction for the Steam Frame displays (VCOM)
 Comment[ru]=Коррекция столбцов дисплеев Steam Frame (VCOM)
+Comment[de]=Spaltenkorrektur für die Displays des Steam Frame (VCOM)
 Exec=/usr/bin/systemd-run --user --collect --quiet --unit=frame-vcom /usr/bin/python3 -I /home/$U/.local/lib/frame-vcom/frame_vcom.py
 Icon=frame-vcom
 Terminal=false
@@ -79,4 +80,5 @@ if [ $NEW_CONF = 1 ]; then
   echo
   echo "The correction is OFF until you calibrate it for this headset: see README.md (cold point, then hot point)."
   echo "Коррекция выключена, пока вы не откалибруете её под свой шлем: см. README.md (холодная, затем горячая точка)."
+  echo "Die Korrektur ist AUS, bis Sie sie für dieses Headset kalibrieren: siehe README.md (Kaltpunkt, dann Warmpunkt)."
 fi

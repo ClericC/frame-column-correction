@@ -90,15 +90,27 @@ After installing, the correction is **off** and all values are 0. Calibrate it f
 
 ### Calibration (once)
 
-1. **Cold point.** Right after switching on a cold headset, open the app (see above) and press **ON**. Look at a flat grey or green surface and turn your head slowly. Use "−" / "+" to find the value without stripes for each display (close the other eye while checking one). Then press **"Save cold point"**, and press again to confirm.
+1. **Cold point.** Right after switching on a cold headset, open the app (see above) and press **ON**. Look at a flat grey or green surface (**Calibration tools → Grey** or **Green** puts one in front of you) and turn your head slowly. Use "−" / "+" to find the value without stripes for each display (close the other eye while checking one). Then press **"Save cold point"**, and press again to confirm.
 2. **Hot point.** Play for 1–2 hours, until "Displays (est.)" stops rising noticeably. Find the values again and press **"Save hot point"**.
 3. Done. Between the two points the service follows the temperature by itself.
+
+The confirm button shows the temperature that will be saved. If you saved a point by mistake, press **Undo** next to the message (it stays for 20 seconds): the previous point and trims come back.
 
 If stripes show up at some stage of the warm-up later, adjust with "−/+" (a temporary trim on top of the curve). If you keep needing a trim, save the point again.
 
 Tips:
 - **"Inverted" stripes** mean too much correction.
-- **If stripes appear midway through the warm-up,** tune `LAG_MIN` in the settings file: how slowly the displays follow the camera temperature, in minutes (default 22). Lower it if the correction lags behind, raise it if it runs ahead.
+- **If stripes appear midway through the warm-up,** change the **warm-up delay** (`LAG_MIN`) in **Calibration tools**: how slowly the displays follow the camera temperature, in minutes (default 22). Lower it if the correction lags behind, raise it if it runs ahead.
+
+### Calibration tools
+
+The **Calibration tools** button at the bottom of the app opens a second screen:
+
+- **Test pattern: Grey, Green, Blue.** A large flat background, fixed in the room about 2 m in front of you. Close the dashboard and turn your head slowly: stripes are easiest to see this way. **Remove pattern** takes it away (it also disappears when the app is closed).
+- **Ghosting.** A high-contrast checkerboard that moves with your head for 5 minutes, then a grey background with a question: close one eye, then the other. If an outline stays longer than a few seconds, see *Safety checks*.
+- **Display warm-up delay (`LAG_MIN`)**, 5–60 minutes, see *How the temperature tracking works*.
+
+![Calibration tools](docs/screenshots/tools-en.png)
 
 ### How the temperature tracking works
 
@@ -111,10 +123,29 @@ Tips:
 
 ### Safety checks
 
-- Once a week, check for image retention: look at a still, high-contrast image for 5–10 minutes, then at a flat grey background, one eye at a time. If an outline stays longer than a few seconds, turn the correction off.
+- Once a week, check for image retention with **Calibration tools → Ghosting** (or look at a still, high-contrast image for 5–10 minutes, then at a flat grey background, one eye at a time). If an outline stays longer than a few seconds, turn the correction off.
 - The service never goes beyond −10 … +45 steps from the factory value.
 - If the service cannot read the displays' factory values, it **changes nothing** and shows an error in the app.
+- Before the first write, the service checks that the display driver looks as expected: the factory values it reports must match the displays' own memory. If not (for example after a SteamOS update changed the driver), it **changes nothing** and the app shows "Unknown display driver".
 - After very long sessions (many hours) the displays may temporarily need more correction. A break is the better fix, not higher values.
+
+### FAQ
+
+**PowerShell says "The token '&&' is not a valid statement separator".** The command is meant for the headset, but you are still on the computer. Connect first with `ssh steamos@frame` (see *Where to type the commands*).
+
+**"Permission denied" when updating.** Files from the previous version belong to root. Remove them with `sudo rm -rf …` as shown under *Update*.
+
+**Column Correction is not in the "+" menu.** Restart the headset after installing. If it is still missing, check that `~/.local/share/applications/frame-vcom.desktop` exists, or install again.
+
+**The app says "Service vcom-fix is not responding".** Check `systemctl is-active vcom-fix` and the log `sudo journalctl -u vcom-fix`. After a major SteamOS update the service may be gone: install again.
+
+**The app says "Cannot read the displays' factory values" or "Unknown display driver".** The correction is paused and nothing is written to the displays, so it is safe. Please open an [issue](https://github.com/ClericC/frame-column-correction/issues) with the output of `cat /run/vcom-fix.state`.
+
+**Stripes come back for a few minutes after a break.** Expected: the temperature estimate needs time to catch up (see *How the temperature tracking works*).
+
+**Do I need to calibrate for each refresh rate?** The service uses the displays' own factory value for each refresh rate and re-applies the correction within about 2 seconds after a switch; the same offsets are added for all rates. So far this has been tested at 90 Hz. If another rate needs different values on your headset, please report it.
+
+**Can I share my values?** Yes, that helps: open an issue with your display type, cold and hot values and refresh rate. Values are individual, so do not copy someone else's without checking.
 
 ### Files and commands
 
@@ -230,15 +261,27 @@ Your settings are kept. If you are working as root (the line starts with `[root@
 
 ### Калибровка (один раз)
 
-1. **Холодная точка.** Сразу после включения холодного шлема откройте приложение (см. выше) и нажмите **ВКЛ**. Смотрите на ровную серую или зелёную поверхность и медленно поворачивайте голову. Кнопками «−» / «+» подберите для каждого дисплея значение, при котором полос нет (проверяя дисплей, закрывайте другой глаз). Затем нажмите **«Сохранить холодную точку»** и ещё раз для подтверждения.
+1. **Холодная точка.** Сразу после включения холодного шлема откройте приложение (см. выше) и нажмите **ВКЛ**. Смотрите на ровную серую или зелёную поверхность (её можно включить: **Инструменты калибровки → Серый** или **Зелёный**) и медленно поворачивайте голову. Кнопками «−» / «+» подберите для каждого дисплея значение, при котором полос нет (проверяя дисплей, закрывайте другой глаз). Затем нажмите **«Сохранить холодную точку»** и ещё раз для подтверждения.
 2. **Горячая точка.** Поиграйте 1–2 часа, пока «Дисплеи (расчёт)» не перестанут заметно расти. Снова подберите значения и нажмите **«Сохранить горячую точку»**.
 3. Готово. Между этими точками служба плавно меняет коррекцию по температуре сама.
+
+Кнопка подтверждения показывает температуру, которая будет сохранена. Если точка сохранена по ошибке, нажмите **«Отменить»** рядом с сообщением (кнопка видна 20 секунд): вернутся прежняя точка и поправки.
 
 Если позже полосы появятся на каком-то этапе прогрева, подкрутите «−/+» (это временная поправка поверх кривой). Если поправка нужна постоянно, сохраните точку заново.
 
 Подсказки:
 - **Полосы «в обратную сторону»** значат, что коррекции слишком много.
-- **Если полосы появляются на середине прогрева,** настройте в файле параметр `LAG_MIN`: насколько медленно дисплеи догоняют температуру камер, в минутах (по умолчанию 22). Если коррекция запаздывает, уменьшите его; если опережает, увеличьте.
+- **Если полосы появляются на середине прогрева,** измените **задержку прогрева** (`LAG_MIN`) в **«Инструментах калибровки»**: насколько медленно дисплеи догоняют температуру камер, в минутах (по умолчанию 22). Если коррекция запаздывает, уменьшите её; если опережает, увеличьте.
+
+### Инструменты калибровки
+
+Кнопка **«Инструменты калибровки»** внизу приложения открывает второй экран:
+
+- **Тестовая картинка: серый, зелёный, синий.** Большой ровный фон, закреплённый в комнате примерно в 2 м перед вами. Закройте дашборд и медленно поворачивайте голову: так полосы видно лучше всего. Кнопка **«Убрать картинку»** убирает её (она исчезает и при закрытии приложения).
+- **«Призраки».** Контрастная шахматная доска, которая 5 минут движется вместе с головой, затем серый фон с вопросом: закройте один глаз, потом другой. Если контур держится дольше нескольких секунд, см. «Безопасность и проверка».
+- **Задержка прогрева дисплеев (`LAG_MIN`)**, от 5 до 60 минут, см. «Как служба следит за температурой».
+
+![Инструменты калибровки](docs/screenshots/tools-ru.png)
 
 ### Как служба следит за температурой
 
@@ -251,10 +294,29 @@ Your settings are kept. If you are working as root (the line starts with `[root@
 
 ### Безопасность и проверка
 
-- Раз в неделю проверяйте «призраки»: 5–10 минут смотрите на неподвижную контрастную картинку, потом на ровный серый фон, по очереди каждым глазом. Если контур держится дольше нескольких секунд, выключите коррекцию.
+- Раз в неделю проверяйте «призраки» через **«Инструменты калибровки» → «Призраки»** (или 5–10 минут смотрите на неподвижную контрастную картинку, потом на ровный серый фон, по очереди каждым глазом). Если контур держится дольше нескольких секунд, выключите коррекцию.
 - Служба никогда не выходит за пределы от −10 до +45 шагов от заводского значения.
 - Если служба не может прочитать заводские значения дисплеев, она **ничего не меняет** и показывает ошибку в приложении.
+- Перед первой записью служба проверяет, что драйвер дисплеев выглядит как ожидается: заводские значения, которые он сообщает, должны совпадать с памятью самих дисплеев. Если нет (например, обновление SteamOS изменило драйвер), служба **ничего не меняет**, а приложение показывает «Неизвестный драйвер дисплеев».
 - После очень долгих сессий (много часов) дисплеям может временно требоваться больше коррекции. Лучшее средство — перерыв, а не увеличение значений.
+
+### Частые вопросы
+
+**PowerShell пишет «Лексема "&&" не является допустимым разделителем».** Команда предназначена для шлема, а вы ещё на компьютере. Сначала подключитесь: `ssh steamos@frame` (см. «Где вводить команды»).
+
+**«Permission denied» при обновлении.** Файлы прошлой версии принадлежат root. Удалите их через `sudo rm -rf …`, как в разделе «Обновление».
+
+**В меню «+» нет «Коррекции столбцов».** Перезагрузите шлем после установки. Если пункта всё ещё нет, проверьте, что есть файл `~/.local/share/applications/frame-vcom.desktop`, или установите заново.
+
+**Приложение пишет «Служба vcom-fix не отвечает».** Проверьте `systemctl is-active vcom-fix` и журнал `sudo journalctl -u vcom-fix`. После крупного обновления SteamOS служба может пропасть: установите заново.
+
+**Приложение пишет «Не удалось прочитать заводские значения дисплеев» или «Неизвестный драйвер дисплеев».** Коррекция приостановлена, и на дисплеи ничего не записывается, так что это безопасно. Пожалуйста, создайте [issue](https://github.com/ClericC/frame-column-correction/issues) с выводом `cat /run/vcom-fix.state`.
+
+**После перерыва полосы на несколько минут возвращаются.** Так и должно быть: расчётной температуре нужно время, чтобы догнать реальную (см. «Как служба следит за температурой»).
+
+**Нужно ли калибровать для каждой частоты обновления?** Служба берёт собственное заводское значение дисплеев для каждой частоты и примерно через 2 секунды после переключения применяет коррекцию заново; одинаковые смещения добавляются для всех частот. Пока это проверено на 90 Гц. Если на вашем шлеме другой частоте нужны другие значения, сообщите, пожалуйста.
+
+**Можно ли поделиться своими значениями?** Да, это поможет: создайте issue с типом дисплеев, холодными и горячими значениями и частотой. Значения индивидуальны, поэтому чужие без проверки не копируйте.
 
 ### Файлы и команды
 
@@ -295,9 +357,9 @@ Bei einigen Steam-Frame-Besitzern, auch bei mir, sind feine senkrechte Streifen 
 Die Streifen hängen offenbar mit der **VCOM**-Spannung der LCD-Displays zusammen: Verschiebt man sie gegenüber dem Werkswert, verschwinden die Streifen, und die nötige Verschiebung wächst, wenn sich die Displays erwärmen. Warum der Werkswert nicht passt, ist nicht bekannt (Kalibrierbedingungen, ein Kalibrierfehler oder ein Defekt sind möglich). Dieses Paket macht ungefähr das, was die Einstellung „Column correction“ bei der Valve Index tat:
 
 - **der Dienst `vcom-fix`** verschiebt VCOM jedes Displays relativ zu dessen eigenem Werkswert und folgt der Erwärmung des Headsets;
-- **die App „Column Correction“** im SteamVR-Dashboard schaltet die Korrektur ein und aus, stellt sie für das linke und rechte Display getrennt ein und kalibriert sie direkt im Headset. Die App ist auf Englisch (oder Russisch).
+- **die App „Column Correction“** im SteamVR-Dashboard schaltet die Korrektur ein und aus, stellt sie für das linke und rechte Display getrennt ein und kalibriert sie direkt im Headset. Die App gibt es auf Deutsch, Englisch und Russisch; ihr Name bleibt „Column Correction“.
 
-![Die App „Column Correction“ im SteamVR-Dashboard](docs/screenshots/app-en.png)
+![Die App „Column Correction“ im SteamVR-Dashboard](docs/screenshots/app-de.png)
 
 ### Warum dieses Projekt
 
@@ -366,26 +428,38 @@ Neueste Version: [frame-column-correction.tar.gz](https://github.com/ClericC/fra
 2. Unten im Dashboard auf **„+“** klicken.
 3. In der Liste der Programme zum Starten **Column Correction** wählen.
 
-Die App öffnet sich im Dashboard. Die Korrektur selbst übernimmt der Dienst, sie läuft auch bei geschlossener App weiter: Die App wird nur zum Ein-/Ausschalten, Nachjustieren und Kalibrieren gebraucht. **Close** beendet die App; geöffnet wird sie auf dieselbe Weise.
+Die App öffnet sich im Dashboard. Die Korrektur selbst übernimmt der Dienst, sie läuft auch bei geschlossener App weiter: Die App wird nur zum Ein-/Ausschalten, Nachjustieren und Kalibrieren gebraucht. **Schließen** beendet die App; geöffnet wird sie auf dieselbe Weise.
 
 Nach der Installation ist die Korrektur **aus** und alle Werte sind 0. Zuerst für das eigene Headset kalibrieren.
 
 ### Kalibrierung (einmalig)
 
-1. **Kalter Punkt.** Direkt nach dem Einschalten eines kalten Headsets die App öffnen und **ON** drücken. Auf eine gleichmäßige graue oder grüne Fläche schauen und den Kopf langsam drehen. Mit „−“ / „+“ für jedes Display den Wert ohne Streifen finden (dabei das andere Auge schließen). Dann **„Save cold point“** drücken und zur Bestätigung noch einmal.
-2. **Warmer Punkt.** 1–2 Stunden spielen, bis „Displays (est.)“ nicht mehr deutlich steigt. Die Werte erneut finden und **„Save hot point“** drücken.
+1. **Kaltpunkt.** Direkt nach dem Einschalten eines kalten Headsets die App öffnen und **AN** drücken. Auf eine gleichmäßige graue oder grüne Fläche schauen (**Kalibrierwerkzeuge → Grau** oder **Grün** stellt eine vor Sie) und den Kopf langsam drehen. Mit „−“ / „+“ für jedes Display den Wert ohne Streifen finden (dabei das andere Auge schließen). Dann **„Kaltpunkt speichern“** drücken und zur Bestätigung noch einmal.
+2. **Warmpunkt.** 1–2 Stunden spielen, bis „Displays (geschätzt)“ nicht mehr deutlich steigt. Die Werte erneut finden und **„Warmpunkt speichern“** drücken.
 3. Fertig. Zwischen beiden Punkten folgt der Dienst der Temperatur selbstständig.
+
+Die Bestätigungstaste zeigt die Temperatur, die gespeichert wird. Wurde ein Punkt versehentlich gespeichert, **„Rückgängig“** neben der Meldung drücken (die Taste bleibt 20 Sekunden sichtbar): Der vorherige Punkt und die Korrekturen kommen zurück.
 
 Tauchen später in einer Phase der Erwärmung Streifen auf, mit „−/+“ nachjustieren (eine vorübergehende Korrektur über der Kurve). Wird sie dauerhaft gebraucht, den Punkt neu speichern.
 
 Tipps:
 - **„Umgekehrte“ Streifen** bedeuten zu viel Korrektur.
-- **Erscheinen Streifen mitten in der Erwärmung,** `LAG_MIN` in der Einstellungsdatei anpassen: wie langsam die Displays der Kameratemperatur folgen, in Minuten (Standard 22). Verringern, wenn die Korrektur hinterherhinkt, erhöhen, wenn sie vorauseilt.
+- **Erscheinen Streifen mitten in der Erwärmung,** die **Aufwärmverzögerung** (`LAG_MIN`) in den **Kalibrierwerkzeugen** anpassen: wie langsam die Displays der Kameratemperatur folgen, in Minuten (Standard 22). Verringern, wenn die Korrektur hinterherhinkt, erhöhen, wenn sie vorauseilt.
+
+### Kalibrierwerkzeuge
+
+Die Taste **„Kalibrierwerkzeuge“** unten in der App öffnet eine zweite Seite:
+
+- **Testbild: Grau, Grün, Blau.** Eine große gleichmäßige Fläche, im Raum etwa 2 m vor Ihnen fixiert. Dashboard schließen und den Kopf langsam drehen: So sind Streifen am besten zu sehen. **„Testbild entfernen“** nimmt es weg (es verschwindet auch beim Schließen der App).
+- **Nachbilder.** Ein kontrastreiches Schachbrett, das sich 5 Minuten mit dem Kopf bewegt, danach eine graue Fläche mit einer Frage: ein Auge schließen, dann das andere. Bleibt ein Umriss länger als einige Sekunden, siehe *Sicherheitsprüfungen*.
+- **Aufwärmverzögerung der Displays (`LAG_MIN`)**, 5–60 Minuten, siehe *So funktioniert die Temperaturverfolgung*.
+
+![Kalibrierwerkzeuge](docs/screenshots/tools-de.png)
 
 ### So funktioniert die Temperaturverfolgung
 
 - **Die Displays haben keinen eigenen Temperatursensor.** Der Dienst nutzt den Mittelwert der **Kamera**-Sensoren (`camera0`, `camera1`). Sie sitzen vorne neben den Displays und springen, anders als CPU und GPU, nicht mit der Spiellast.
-- **Die Kameras erwärmen sich schneller als die Displays**, deshalb nutzt der Dienst ihre Temperatur nicht direkt. Er führt eine geglättete **geschätzte Displaytemperatur**, die den Kameras mit einer Verzögerung von `LAG_MIN` Minuten folgt (Standard 22). Die App zeigt sie als „Displays (est.)“.
+- **Die Kameras erwärmen sich schneller als die Displays**, deshalb nutzt der Dienst ihre Temperatur nicht direkt. Er führt eine geglättete **geschätzte Displaytemperatur**, die den Kameras mit einer Verzögerung von `LAG_MIN` Minuten folgt (Standard 22). Die App zeigt sie als „Displays (geschätzt)“.
 - **Die VCOM-Verschiebung** bewegt sich anhand dieser Schätzung gleitend zwischen kaltem und warmem Punkt. Unterhalb des kalten Punkts gilt dessen Wert, oberhalb des warmen Punkts der warme Wert.
 - **Wird das Headset abgesetzt und geht in den Ruhezustand,** kühlen Displays und Kameras ab, und die Schätzung folgt allmählich.
 - **Nach einer Pause** (Headset eine Weile abgesetzt) können daher kurz Streifen auftauchen: Die Schätzung passt noch nicht zur tatsächlichen Displaytemperatur. Bei richtiger Kalibrierung verschwinden sie nach einigen Minuten von selbst. Bleiben sie, einen Kalibrierpunkt oder `LAG_MIN` anpassen.
@@ -393,10 +467,29 @@ Tipps:
 
 ### Sicherheitsprüfungen
 
-- Einmal pro Woche auf Nachbilder prüfen: 5–10 Minuten auf ein unbewegtes, kontrastreiches Bild schauen, dann auf eine gleichmäßige graue Fläche, jeweils mit einem Auge. Bleibt ein Umriss länger als einige Sekunden, die Korrektur ausschalten.
+- Einmal pro Woche mit **Kalibrierwerkzeuge → Nachbilder** prüfen (oder 5–10 Minuten auf ein unbewegtes, kontrastreiches Bild schauen, dann auf eine gleichmäßige graue Fläche, jeweils mit einem Auge). Bleibt ein Umriss länger als einige Sekunden, die Korrektur ausschalten.
 - Der Dienst geht nie über −10 … +45 Schritte vom Werkswert hinaus.
 - Kann der Dienst die Werkswerte der Displays nicht lesen, **ändert er nichts** und zeigt einen Fehler in der App.
+- Vor dem ersten Schreiben prüft der Dienst, ob der Displaytreiber wie erwartet aussieht: Die Werkswerte, die er meldet, müssen mit dem Speicher der Displays übereinstimmen. Wenn nicht (etwa weil ein SteamOS-Update den Treiber geändert hat), **ändert er nichts**, und die App zeigt „Unbekannter Displaytreiber“.
 - Nach sehr langen Sitzungen (viele Stunden) brauchen die Displays vorübergehend eventuell mehr Korrektur. Eine Pause hilft besser als höhere Werte.
+
+### Häufige Fragen
+
+**PowerShell meldet einen Fehler zum Token „&&“.** Der Befehl ist für das Headset gedacht, Sie sind aber noch auf dem Computer. Zuerst verbinden: `ssh steamos@frame` (siehe *Wo die Befehle eingegeben werden*).
+
+**„Permission denied“ beim Aktualisieren.** Die Dateien der vorherigen Version gehören root. Mit `sudo rm -rf …` entfernen, wie unter *Aktualisieren* gezeigt.
+
+**Column Correction fehlt im „+“-Menü.** Das Headset nach der Installation neu starten. Fehlt der Eintrag weiterhin, prüfen, ob `~/.local/share/applications/frame-vcom.desktop` existiert, oder neu installieren.
+
+**Die App meldet „Dienst vcom-fix antwortet nicht“.** `systemctl is-active vcom-fix` und das Protokoll `sudo journalctl -u vcom-fix` prüfen. Nach einem größeren SteamOS-Update kann der Dienst fehlen: neu installieren.
+
+**Die App meldet „Werkswerte der Displays nicht lesbar“ oder „Unbekannter Displaytreiber“.** Die Korrektur ist pausiert, und auf die Displays wird nichts geschrieben, das ist also sicher. Bitte ein [Issue](https://github.com/ClericC/frame-column-correction/issues) mit der Ausgabe von `cat /run/vcom-fix.state` erstellen.
+
+**Nach einer Pause kommen die Streifen für einige Minuten zurück.** Das ist zu erwarten: Die Temperaturschätzung braucht Zeit, um aufzuholen (siehe *So funktioniert die Temperaturverfolgung*).
+
+**Muss ich für jede Bildwiederholrate kalibrieren?** Der Dienst nutzt für jede Rate den eigenen Werkswert der Displays und wendet die Korrektur etwa 2 Sekunden nach einem Wechsel erneut an; für alle Raten werden dieselben Verschiebungen addiert. Bisher bei 90 Hz getestet. Braucht eine andere Rate auf Ihrem Headset andere Werte, bitte melden.
+
+**Kann ich meine Werte teilen?** Ja, das hilft: ein Issue mit Displaytyp, kalten und warmen Werten und Bildwiederholrate erstellen. Die Werte sind individuell, also fremde nicht ungeprüft übernehmen.
 
 ### Dateien und Befehle
 
@@ -433,3 +526,5 @@ MIT, © 2026 ClericC: see `LICENSE`. Feedback and bug reports: [Issues](https://
 
 - OpenVR API (Valve), BSD-3-Clause: `LICENSE.openvr`
 - Pre-rendered glyphs of the DejaVu fonts: `FONT-LICENSE.txt`
+
+Changes between versions: [CHANGELOG.md](CHANGELOG.md).

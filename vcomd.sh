@@ -44,7 +44,23 @@ refresh_rate() {
   grep -hoE 'mode: "[^"]*": [0-9]+' $DBG/dri/*/state 2>/dev/null | grep -oE '[0-9]+$' | grep -v '^0$' | head -1
 }
 
-est=$(grep -oE '^-?[0-9]+$' $EST 2>/dev/null); last_t=$SECONDS; last_key=""; n=0; factory_ok=0
+# Compatibility check, once per boot: the driver files must exist, and the factory VCOM values the driver itself
+# prints in panel_info must match the raw panel-memory bytes this service reads. If the driver or its data layout
+# changes (e.g. after a SteamOS update), they will not match and the service will not write anything.
+compat_ok() {
+  local f i b v
+  for f in panel_info panel_mfg_info panel_write panel_available panel_vsync_to_photons_usec; do [ -e "$1/$f" ] || return 1; done
+  b=($(cat "$1/panel_mfg_info" 2>/dev/null)); [ ${#b[@]} -ge 80 ] || return 1
+  v=($(awk '/ (120|90) vcom[12] /{print $NF}' "$1/panel_info" 2>/dev/null)); [ ${#v[@]} -eq 8 ] || return 1
+  local exp=(${b[13]} ${b[14]} ${b[15]} ${b[16]} ${b[53]} ${b[54]} ${b[55]} ${b[56]})
+  for i in 0 1 2 3 4 5 6 7; do
+    [[ ${v[$i]} =~ ^[0-9a-fA-F]+$ ]] || return 1
+    (( 16#${v[$i]} == exp[$i] )) || return 1
+  done
+}
+
+est=$(grep -oE '^-?[0-9]+$' $EST 2>/dev/null); last_t=$SECONDS; last_key=""; n=0; factory_ok=0; compat=""
+KERNEL=$(uname -r)
 while true; do
   CT=$(num COLD_TEMP); HT=$(num HOT_TEMP); LAG=$(num LAG_MIN)
   CL=$(num COLD_LEFT); CR=$(num COLD_RIGHT); HL=$(num HOT_LEFT); HR=$(num HOT_RIGHT)
@@ -69,8 +85,12 @@ while true; do
   ERR=""; HZ=""
   P=$(dirname "$(find $DBG/dri -name panel_info 2>/dev/null | head -1)")
   if [ -f "$P/panel_write" ] && [ "$(cat "$P/panel_available" 2>/dev/null)" = 1 ]; then
-    [ $factory_ok = 1 ] || { read_factory "$P" && factory_ok=1; }
-    if [ $factory_ok = 1 ]; then
+    if [ $factory_ok != 1 ] && [ "$compat" != failed ]; then
+      if compat_ok "$P"; then compat=ok; read_factory "$P" && factory_ok=1; else compat=failed; fi
+    fi
+    if [ "$compat" = failed ]; then
+      ERR=unknown_driver       # never write to a driver this service was not made for
+    elif [ $factory_ok = 1 ]; then
       HZ=$(refresh_rate)
       if [ -n "$HZ" ] && (( HZ >= 100 )); then FL=$F120_0; FR=$F120_1; else FL=$F90_0; FR=$F90_1; fi
       VL=$((FL+OL)); VR=$((FR+OR))
@@ -97,6 +117,9 @@ while true; do
     echo "trim_left=$TL"; echo "trim_right=$TR"
     echo "left=$OL"; echo "right=$OR"
     echo "refresh_hz=$HZ"
+    echo "compat=${compat:-pending}"
+    echo "kernel=$KERNEL"
+    echo "version=$(cat /home/steamos/.local/lib/frame-vcom/VERSION 2>/dev/null)"
     [ $factory_ok = 1 ] && printf 'factory_left=0x%04x\nfactory_right=0x%04x\n' $FL $FR
     echo "error=$ERR"
     echo "updated=$(date +%s)"; } > $STATE.tmp && mv $STATE.tmp $STATE
