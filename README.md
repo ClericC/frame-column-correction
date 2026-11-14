@@ -58,8 +58,7 @@ Latest version: [frame-column-correction.tar.gz](https://github.com/ClericC/fram
    It asks for the Developer Mode password (it is not shown while typing; that is normal). If `frame` is not found, use the headset's IP address.
 2. **On the headset** (the line starts with `[steamos@frame ~]$`), download and install:
    ```
-   curl -LO https://github.com/ClericC/frame-column-correction/releases/latest/download/frame-column-correction.tar.gz
-   tar -xzf frame-column-correction.tar.gz && sudo bash frame-column-correction/install.sh
+   curl -LO https://github.com/ClericC/frame-column-correction/releases/latest/download/frame-column-correction.tar.gz && tar -xzf frame-column-correction.tar.gz && sudo bash frame-column-correction/install.sh
    ```
    It should end with `vcom-fix: active`. Type `exit` to go back to the computer.
 
@@ -69,6 +68,8 @@ Latest version: [frame-column-correction.tar.gz](https://github.com/ClericC/fram
 2. **On the computer** (PowerShell), copy it to the headset and connect (adjust the path):
    ```
    scp $HOME\Downloads\frame-column-correction.tar.gz steamos@frame:
+   ```
+   ```
    ssh steamos@frame
    ```
 3. **On the headset**, install:
@@ -158,9 +159,7 @@ The **Calibration tools** button at the bottom of the app opens a second screen:
 
 **Update:** connect to the headset (`ssh steamos@frame`) and **on the headset** run (or bring the archive over from the computer as in option 2):
 ```
-sudo rm -rf frame-column-correction frame-column-correction.tar.gz
-curl -LO https://github.com/ClericC/frame-column-correction/releases/latest/download/frame-column-correction.tar.gz
-tar -xzf frame-column-correction.tar.gz && sudo bash frame-column-correction/install.sh
+sudo rm -rf frame-column-correction frame-column-correction.tar.gz && curl -LO https://github.com/ClericC/frame-column-correction/releases/latest/download/frame-column-correction.tar.gz && tar -xzf frame-column-correction.tar.gz && sudo bash frame-column-correction/install.sh
 ```
 Your settings are kept. If you are working as root (the line starts with `[root@frame …]#`), go to the right folder first: `cd /home/steamos`.
 
@@ -229,8 +228,7 @@ Your settings are kept. If you are working as root (the line starts with `[root@
    Команда спросит пароль режима разработчика (при вводе он не отображается, это нормально). Если имя `frame` не находится, используйте IP-адрес шлема.
 2. **На шлеме** (строка начинается с `[steamos@frame ~]$`) скачайте и установите:
    ```
-   curl -LO https://github.com/ClericC/frame-column-correction/releases/latest/download/frame-column-correction.tar.gz
-   tar -xzf frame-column-correction.tar.gz && sudo bash frame-column-correction/install.sh
+   curl -LO https://github.com/ClericC/frame-column-correction/releases/latest/download/frame-column-correction.tar.gz && tar -xzf frame-column-correction.tar.gz && sudo bash frame-column-correction/install.sh
    ```
    В конце должно появиться `vcom-fix: active`. Выйти со шлема обратно на компьютер можно командой `exit`.
 
@@ -240,6 +238,8 @@ Your settings are kept. If you are working as root (the line starts with `[root@
 2. **На компьютере** (PowerShell) скопируйте его на шлем и подключитесь (путь поправьте под себя):
    ```
    scp $HOME\Downloads\frame-column-correction.tar.gz steamos@frame:
+   ```
+   ```
    ssh steamos@frame
    ```
 3. **На шлеме** установите:
@@ -329,9 +329,7 @@ Your settings are kept. If you are working as root (the line starts with `[root@
 
 **Обновление.** Подключитесь к шлему (`ssh steamos@frame`) и **на шлеме** выполните (или скачайте архив через компьютер, как в способе 2):
 ```
-sudo rm -rf frame-column-correction frame-column-correction.tar.gz
-curl -LO https://github.com/ClericC/frame-column-correction/releases/latest/download/frame-column-correction.tar.gz
-tar -xzf frame-column-correction.tar.gz && sudo bash frame-column-correction/install.sh
+sudo rm -rf frame-column-correction frame-column-correction.tar.gz && curl -LO https://github.com/ClericC/frame-column-correction/releases/latest/download/frame-column-correction.tar.gz && tar -xzf frame-column-correction.tar.gz && sudo bash frame-column-correction/install.sh
 ```
 Ваши настройки сохранятся. Если вы работаете под root (строка начинается с `[root@frame …]#`), сначала перейдите в нужную папку: `cd /home/steamos`.
 
@@ -402,8 +400,7 @@ Neueste Version: [frame-column-correction.tar.gz](https://github.com/ClericC/fra
    Es wird das Passwort des Entwicklermodus abgefragt (es wird beim Tippen nicht angezeigt, das ist normal). Wird `frame` nicht gefunden, die IP-Adresse des Headsets verwenden.
 2. **Auf dem Headset** (Zeile beginnt mit `[steamos@frame ~]$`) herunterladen und installieren:
    ```
-   curl -LO https://github.com/ClericC/frame-column-correction/releases/latest/download/frame-column-correction.tar.gz
-   tar -xzf frame-column-correction.tar.gz && sudo bash frame-column-correction/install.sh
+   curl -LO https://github.com/ClericC/frame-column-correction/releases/latest/download/frame-column-correction.tar.gz && tar -xzf frame-column-correction.tar.gz && sudo bash frame-column-correction/install.sh
    ```
    Am Ende sollte `vcom-fix: active` erscheinen. Mit `exit` kehren Sie zum Computer zurück.
 
@@ -413,6 +410,8 @@ Neueste Version: [frame-column-correction.tar.gz](https://github.com/ClericC/fra
 2. **Auf dem Computer** (PowerShell) auf das Headset kopieren und verbinden (Pfad anpassen):
    ```
    scp $HOME\Downloads\frame-column-correction.tar.gz steamos@frame:
+   ```
+   ```
    ssh steamos@frame
    ```
 3. **Auf dem Headset** installieren:
@@ -502,9 +501,7 @@ Die Taste **„Kalibrierwerkzeuge“** unten in der App öffnet eine zweite Seit
 
 **Aktualisieren:** mit dem Headset verbinden (`ssh steamos@frame`) und **auf dem Headset** ausführen (oder das Archiv wie bei Variante 2 vom Computer übertragen):
 ```
-sudo rm -rf frame-column-correction frame-column-correction.tar.gz
-curl -LO https://github.com/ClericC/frame-column-correction/releases/latest/download/frame-column-correction.tar.gz
-tar -xzf frame-column-correction.tar.gz && sudo bash frame-column-correction/install.sh
+sudo rm -rf frame-column-correction frame-column-correction.tar.gz && curl -LO https://github.com/ClericC/frame-column-correction/releases/latest/download/frame-column-correction.tar.gz && tar -xzf frame-column-correction.tar.gz && sudo bash frame-column-correction/install.sh
 ```
 Ihre Einstellungen bleiben erhalten. Arbeiten Sie als root (Zeile beginnt mit `[root@frame …]#`), zuerst in den richtigen Ordner wechseln: `cd /home/steamos`.
 
